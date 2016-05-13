@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
+        testConfig {
             keyAlias 'fitness'
             keyPassword 'test123'
             storeFile file('test.jks')
@@ -22,7 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.testConfig
         }
     }
 }
