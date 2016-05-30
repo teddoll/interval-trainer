@@ -1,32 +1,75 @@
 package com.teddoll.fitness.intervaltrainer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.teddoll.fitness.intervaltrainer.service.IntervalService;
+
+import timber.log.Timber;
 
 public class LandingActivity extends AppCompatActivity {
+
+    TextView mStatus;
+    TextView mTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+        Timber.tag("LandingActivity");
+        Timber.d("Activity Created");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent startServiceIntent = new Intent(LandingActivity.this, IntervalService.class);
+                startServiceIntent.putExtra(IntervalService.SET_ID_ARG, 2);
+                startServiceIntent.setAction(IntervalService.START_SESSION);
+                startService(startServiceIntent);
+
+
+            }
+        });
+        findViewById(R.id.stop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent startServiceIntent = new Intent(LandingActivity.this, IntervalService.class);
+                startServiceIntent.setAction(IntervalService.QUIT_SESSION);
+                startService(startServiceIntent);
+            }
+        });
+        mStatus = (TextView) findViewById(R.id.status);
+        mTime = (TextView) findViewById(R.id.time);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
+//        ContentValues vals = new ContentValues();
+//        List<Long> times = new ArrayList<>(3);
+//        times.add(1l);
+//        times.add(1l);
+//        times.add(1l);
+//        vals.put(IntervalContract.SetEntry.LABEL, "TEST");
+//        vals.put(IntervalContract.SetEntry.TIMES, DBStringParseUtil.serializeSetTimes(times));
+//        vals.put(IntervalContract.SetEntry.TOTAL_TIME, 3l);
+//        Uri uri = getContentResolver().insert(IntervalContract.SetEntry.CONTENT_URI, vals);
+//        Timber.d("@@@@@@ " +uri.toString());
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

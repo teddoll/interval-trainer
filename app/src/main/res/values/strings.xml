@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Interval Trainer</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_tracking">TrackingActivity</string>
+    <string name="get_started">Lets get Started</string>
+    <string name="session_complete">Session Complete</string>
+    <string name="time_format">$1%d.$2%d</string>
+    <string name="distance_format">Distance: $1%.2f</string>
 </resources>
