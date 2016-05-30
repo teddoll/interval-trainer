@@ -10,9 +10,6 @@ import android.os.Build;
 import android.util.Log;
 
 import com.teddoll.fitness.intervaltrainer.BuildConfig;
-import com.teddoll.fitness.intervaltrainer.data.intervallocation.IntervalLocationColumns;
-import com.teddoll.fitness.intervaltrainer.data.intervalsession.IntervalSessionColumns;
-import com.teddoll.fitness.intervaltrainer.data.intervalset.IntervalSetColumns;
 
 public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = IntervalSQLiteOpenHelper.class.getSimpleName();
@@ -25,31 +22,32 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
 
     // @formatter:off
     public static final String SQL_CREATE_TABLE_INTERVAL_LOCATION = "CREATE TABLE IF NOT EXISTS "
-            + IntervalLocationColumns.TABLE_NAME + " ( "
-            + IntervalLocationColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + IntervalLocationColumns.INTERVAL_SESSION_ID + " INTEGER NOT NULL, "
-            + IntervalLocationColumns.LOCATION + " TEXT, "
-            + IntervalLocationColumns.AVERAGE_VELOCITY + " REAL "
-            + ", CONSTRAINT fk_interval_session_id FOREIGN KEY (" + IntervalLocationColumns.INTERVAL_SESSION_ID + ") REFERENCES interval_session (_id) ON DELETE CASCADE"
+            + IntervalContract.LocationEntry.TABLE_NAME + " ( "
+            + IntervalContract.LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + " INTEGER NOT NULL, "
+            + IntervalContract.LocationEntry.LOCATION + " TEXT, "
+            + IntervalContract.LocationEntry.AVERAGE_VELOCITY + " REAL "
+            + ", CONSTRAINT fk_interval_session_id FOREIGN KEY (" + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + ") REFERENCES interval_session (_id) ON DELETE CASCADE"
             + " );";
 
     public static final String SQL_CREATE_TABLE_INTERVAL_SESSION = "CREATE TABLE IF NOT EXISTS "
-            + IntervalSessionColumns.TABLE_NAME + " ( "
-            + IntervalSessionColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + IntervalSessionColumns.START_TIME + " TEXT, "
-            + IntervalSessionColumns.POLY_LINE_DATA + " TEXT "
+            + IntervalContract.SessionEntry.TABLE_NAME + " ( "
+            + IntervalContract.SessionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + IntervalContract.SessionEntry.START_TIME + " TEXT, "
+            + IntervalContract.SessionEntry.START_LOCATION + " TEXT, "
+            + IntervalContract.SessionEntry.POLY_LINE_DATA + " TEXT "
             + " );";
 
     public static final String SQL_CREATE_TABLE_INTERVAL_SET = "CREATE TABLE IF NOT EXISTS "
-            + IntervalSetColumns.TABLE_NAME + " ( "
-            + IntervalSetColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + IntervalSetColumns.LABEL + " TEXT, "
-            + IntervalSetColumns.TOTAL_TIME + " INTEGER, "
-            + IntervalSetColumns.TIMES + " TEXT "
+            + IntervalContract.SetEntry.TABLE_NAME + " ( "
+            + IntervalContract.SetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + IntervalContract.SetEntry.LABEL + " TEXT, "
+            + IntervalContract.SetEntry.TOTAL_TIME + " INTEGER, "
+            + IntervalContract.SetEntry.TIMES + " TEXT "
             + " );";
 
     public static final String SQL_CREATE_INDEX_INTERVAL_SET_LABEL = "CREATE INDEX IDX_INTERVAL_SET_LABEL "
-            + " ON " + IntervalSetColumns.TABLE_NAME + " ( " + IntervalSetColumns.LABEL + " );";
+            + " ON " + IntervalContract.SetEntry.TABLE_NAME + " ( " + IntervalContract.SetEntry.LABEL + " );";
 
     // @formatter:on
 
