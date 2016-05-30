@@ -95,7 +95,6 @@ public class IntervalProvider extends ContentProvider {
     }
 
 
-
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         Timber.d(TAG, "insert uri=" + uri + " values=" + values);
@@ -138,6 +137,7 @@ public class IntervalProvider extends ContentProvider {
 
     /**
      * Functions not supported.
+     *
      * @return 0 Not supported
      */
     @Override
@@ -157,7 +157,7 @@ public class IntervalProvider extends ContentProvider {
         int rowsUpdated;
 
         String[] whereArgs = new String[1];
-        if(selectionArgs.length > 0) {
+        if (selectionArgs.length > 0) {
             whereArgs[0] = selectionArgs[0];
         } else {
             throw new android.database.SQLException("update: Invalid selection args " + uri);
@@ -182,7 +182,7 @@ public class IntervalProvider extends ContentProvider {
 
         if (rowsUpdated != 0) {
             Context context = getContext();
-            if(context != null) context.getContentResolver().notifyChange(uri, null);
+            if (context != null) context.getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
     }
@@ -198,7 +198,7 @@ public class IntervalProvider extends ContentProvider {
         int rowsUpdated;
 
         String[] whereArgs = new String[1];
-        if(selectionArgs.length > 0) {
+        if (selectionArgs.length > 0) {
             whereArgs[0] = selectionArgs[0];
         } else {
             throw new android.database.SQLException("delete: Invalid selection args " + uri);
@@ -223,11 +223,10 @@ public class IntervalProvider extends ContentProvider {
 
         if (rowsUpdated != 0) {
             Context context = getContext();
-            if(context != null) context.getContentResolver().notifyChange(uri, null);
+            if (context != null) context.getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
     }
-
 
 
     @Override
@@ -238,40 +237,42 @@ public class IntervalProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             case URI_TYPE_INTERVAL_LOCATION: {
                 retCursor = db.query(IntervalContract.LocationEntry.TABLE_NAME,
-                        new String[] {IntervalContract.LocationEntry.LOCATION,
+                        new String[]{IntervalContract.LocationEntry.LOCATION,
                                 IntervalContract.LocationEntry.AVERAGE_VELOCITY},
                         null, null, null, null, null);
                 break;
             }
-            case URI_TYPE_INTERVAL_SESSION_ID : {
+            case URI_TYPE_INTERVAL_SESSION_ID: {
                 retCursor = db.query(IntervalContract.SessionEntry.TABLE_NAME,
-                        new String[] {IntervalContract.SessionEntry.START_TIME,
-                                IntervalContract.SessionEntry.START_LOCATION,
+                        new String[]{IntervalContract.SessionEntry.START_TIME,
+                                IntervalContract.SessionEntry.END_TIME,
+                                IntervalContract.SessionEntry.DISTANCE_TRAVELED,
                                 IntervalContract.SessionEntry.POLY_LINE_DATA},
-                        IntervalContract.SessionEntry._ID+"=?", new String[] {uri.getPathSegments().get(1)},
+                        IntervalContract.SessionEntry._ID + "=?", new String[]{uri.getPathSegments().get(1)},
                         null, null, null);
                 break;
             }
-            case URI_TYPE_INTERVAL_SESSION : {
+            case URI_TYPE_INTERVAL_SESSION: {
                 retCursor = db.query(IntervalContract.SessionEntry.TABLE_NAME,
-                        new String[] {IntervalContract.SessionEntry.START_TIME,
-                                IntervalContract.SessionEntry.START_LOCATION,
-                                IntervalContract.SessionEntry.POLY_LINE_DATA},
+                        new String[]{IntervalContract.SessionEntry._ID,
+                                IntervalContract.SessionEntry.START_TIME,
+                                IntervalContract.SessionEntry.END_TIME,
+                                IntervalContract.SessionEntry.DISTANCE_TRAVELED},
                         null, null, null, null, null);
                 break;
             }
-            case URI_TYPE_INTERVAL_SET_ID : {
+            case URI_TYPE_INTERVAL_SET_ID: {
                 retCursor = db.query(IntervalContract.SetEntry.TABLE_NAME,
-                        new String[] {IntervalContract.SetEntry.LABEL,
+                        new String[]{IntervalContract.SetEntry.LABEL,
                                 IntervalContract.SetEntry.TIMES,
                                 IntervalContract.SetEntry.TOTAL_TIME},
-                        IntervalContract.SessionEntry._ID+"=?", new String[] {uri.getPathSegments().get(1)},
+                        IntervalContract.SessionEntry._ID + "=?", new String[]{uri.getPathSegments().get(1)},
                         null, null, null);
                 break;
             }
-            case URI_TYPE_INTERVAL_SET : {
+            case URI_TYPE_INTERVAL_SET: {
                 retCursor = db.query(IntervalContract.SetEntry.TABLE_NAME,
-                        new String[] {IntervalContract.SetEntry.LABEL,
+                        new String[]{IntervalContract.SetEntry.LABEL,
                                 IntervalContract.SetEntry.TIMES,
                                 IntervalContract.SetEntry.TOTAL_TIME},
                         null, null, null, null, null);
@@ -287,23 +288,26 @@ public class IntervalProvider extends ContentProvider {
     }
 
 
-
     /*
      * Normalize Functions to prevent SQL injection.
      */
     private ContentValues normalizeLocationValues(ContentValues provided) {
         ContentValues values = new ContentValues();
-        if(provided.containsKey(IntervalContract.LocationEntry.INTERVAL_SESSION_ID)) {
+        if (provided.containsKey(IntervalContract.LocationEntry.INTERVAL_SESSION_ID)) {
             values.put(IntervalContract.LocationEntry.INTERVAL_SESSION_ID,
                     provided.getAsInteger(IntervalContract.LocationEntry.INTERVAL_SESSION_ID));
         }
-        if(provided.containsKey(IntervalContract.LocationEntry.LOCATION)) {
+        if (provided.containsKey(IntervalContract.LocationEntry.LOCATION)) {
             values.put(IntervalContract.LocationEntry.LOCATION,
                     provided.getAsString(IntervalContract.LocationEntry.LOCATION));
         }
-        if(provided.containsKey(IntervalContract.LocationEntry.AVERAGE_VELOCITY)) {
+        if (provided.containsKey(IntervalContract.LocationEntry.AVERAGE_VELOCITY)) {
             values.put(IntervalContract.LocationEntry.AVERAGE_VELOCITY,
                     provided.getAsFloat(IntervalContract.LocationEntry.AVERAGE_VELOCITY));
+        }
+        if (provided.containsKey(IntervalContract.LocationEntry.DISTANCE)) {
+            values.put(IntervalContract.LocationEntry.DISTANCE,
+                    provided.getAsFloat(IntervalContract.LocationEntry.DISTANCE));
         }
         Timber.d(TAG, "normalizeLocationValues= " + values);
         return values;
@@ -311,17 +315,21 @@ public class IntervalProvider extends ContentProvider {
 
     private ContentValues normalizeSessionValues(ContentValues provided) {
         ContentValues values = new ContentValues();
-        if(provided.containsKey(IntervalContract.SessionEntry.START_TIME)) {
+        if (provided.containsKey(IntervalContract.SessionEntry.START_TIME)) {
             values.put(IntervalContract.SessionEntry.START_TIME,
                     provided.getAsString(IntervalContract.SessionEntry.START_TIME));
         }
-        if(provided.containsKey(IntervalContract.SessionEntry.START_LOCATION)) {
-            values.put(IntervalContract.SessionEntry.START_LOCATION,
-                    provided.getAsString(IntervalContract.SessionEntry.START_LOCATION));
+        if (provided.containsKey(IntervalContract.SessionEntry.END_TIME)) {
+            values.put(IntervalContract.SessionEntry.END_TIME,
+                    provided.getAsString(IntervalContract.SessionEntry.END_TIME));
         }
-        if(provided.containsKey(IntervalContract.SessionEntry.POLY_LINE_DATA)) {
+        if (provided.containsKey(IntervalContract.SessionEntry.POLY_LINE_DATA)) {
             values.put(IntervalContract.SessionEntry.POLY_LINE_DATA,
                     provided.getAsString(IntervalContract.SessionEntry.POLY_LINE_DATA));
+        }
+        if(provided.containsKey(IntervalContract.SessionEntry.DISTANCE_TRAVELED)) {
+            values.put(IntervalContract.SessionEntry.DISTANCE_TRAVELED,
+                    provided.getAsFloat(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
         }
         Timber.d(TAG, "normalizeSessionValues= " + values);
         return values;
@@ -329,15 +337,15 @@ public class IntervalProvider extends ContentProvider {
 
     private ContentValues normalizeSetValues(ContentValues provided) {
         ContentValues values = new ContentValues();
-        if(provided.containsKey(IntervalContract.SetEntry.LABEL)) {
+        if (provided.containsKey(IntervalContract.SetEntry.LABEL)) {
             values.put(IntervalContract.SetEntry.LABEL,
                     provided.getAsString(IntervalContract.SetEntry.LABEL));
         }
-        if(provided.containsKey(IntervalContract.SetEntry.TOTAL_TIME)) {
+        if (provided.containsKey(IntervalContract.SetEntry.TOTAL_TIME)) {
             values.put(IntervalContract.SetEntry.TOTAL_TIME,
                     provided.getAsString(IntervalContract.SetEntry.TOTAL_TIME));
         }
-        if(provided.containsKey(IntervalContract.SetEntry.TIMES)) {
+        if (provided.containsKey(IntervalContract.SetEntry.TIMES)) {
             values.put(IntervalContract.SetEntry.TIMES,
                     provided.getAsString(IntervalContract.SetEntry.TIMES));
         }

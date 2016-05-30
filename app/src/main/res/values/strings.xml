@@ -4,6 +4,8 @@
     <string name="title_activity_tracking">TrackingActivity</string>
     <string name="get_started">Lets get Started</string>
     <string name="session_complete">Session Complete</string>
-    <string name="time_format">$1%d.$2%d</string>
-    <string name="distance_format">Distance: $1%.2f</string>
+    <string name="time_format">$1$d.%2$d</string>
+    <string name="distance_format">Distance: %1$.2f</string>
+
+    <string name="empty_sessions">You don\'t have any Sessions saved. Pressed the play button below to get started.</string>
 </resources>

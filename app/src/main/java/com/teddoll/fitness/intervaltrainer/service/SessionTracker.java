@@ -6,18 +6,20 @@ import android.os.SystemClock;
 /**
  * Created by teddydoll on 5/20/16.
  */
-public final class VelocityTracker {
+public final class SessionTracker {
 
     private long mTime;
     private Location mLocation;
     private double mVelocity;
     private double mDistance;
+    private double mLastTrackedDistance;
 
     public void start(Location location) {
         mTime = SystemClock.uptimeMillis();
         mLocation = location;
         mVelocity = 0d;
         mDistance = 0d;
+        mLastTrackedDistance = 0d;
     }
 
     public synchronized void update(Location location) {
@@ -51,6 +53,12 @@ public final class VelocityTracker {
 
     public double getTotalDistance() {
         return mDistance;
+    }
+
+    public double getTrackedDistanceAndUpdate() {
+        double ret = mDistance - mLastTrackedDistance;
+        mLastTrackedDistance = mDistance;
+        return ret;
     }
 
     private static double distance(double lat1, double lon1, double el1, double lat2,

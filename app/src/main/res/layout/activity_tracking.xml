@@ -42,13 +42,13 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/pause"
+        android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_media_stop"
+        android:src="@drawable/ic_stop_white"
         android:visibility="gone"
         />
 
@@ -59,7 +59,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_media_play"
+        android:src="@drawable/ic_play_arrow"
          />
 
 </RelativeLayout>

@@ -25,7 +25,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.teddoll.fitness.intervaltrainer.BuildConfig;
-import com.teddoll.fitness.intervaltrainer.LandingActivity;
+import com.teddoll.fitness.intervaltrainer.session.LandingActivity;
 import com.teddoll.fitness.intervaltrainer.R;
 import com.teddoll.fitness.intervaltrainer.data.IntervalContract;
 import com.teddoll.fitness.intervaltrainer.util.DBStringParseUtil;
@@ -52,7 +52,7 @@ public class IntervalService extends Service implements LocationListener {
 
     private int mSessionId = -1;
 
-    private VelocityTracker mVelocityTracker;
+    private SessionTracker mVelocityTracker;
 
     private ArrayList<Messenger> mClients;
 
@@ -221,7 +221,7 @@ public class IntervalService extends Service implements LocationListener {
                                     Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                                     storeInitialIntervalSession(currentLocation);
                                     mRunningLocationString = DBStringParseUtil.serializeLocation(currentLocation);
-                                    mVelocityTracker = new VelocityTracker();
+                                    mVelocityTracker = new SessionTracker();
                                     mVelocityTracker.start(currentLocation);
                                     time();
 
@@ -348,6 +348,7 @@ public class IntervalService extends Service implements LocationListener {
         vals.put(IntervalContract.LocationEntry.AVERAGE_VELOCITY,
                 mVelocityTracker.getCurrentAverageVelocity());
         vals.put(IntervalContract.LocationEntry.INTERVAL_SESSION_ID, mSessionId);
+        vals.put(IntervalContract.LocationEntry.DISTANCE, mVelocityTracker.getTrackedDistanceAndUpdate());
 
         getContentResolver().insert(IntervalContract.LocationEntry.CONTENT_URI, vals);
     }
@@ -374,8 +375,6 @@ public class IntervalService extends Service implements LocationListener {
         Date date = new Date();
         ContentValues values = new ContentValues();
         String serialLocation = DBStringParseUtil.serializeLocation(location);
-        values.put(IntervalContract.SessionEntry.START_LOCATION,
-                serialLocation);
         values.put(IntervalContract.SessionEntry.START_TIME,
                 DBStringParseUtil.serializeDate(date));
         values.put(IntervalContract.SessionEntry.POLY_LINE_DATA,

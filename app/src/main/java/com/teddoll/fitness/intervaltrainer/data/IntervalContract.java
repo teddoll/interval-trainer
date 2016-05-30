@@ -41,7 +41,7 @@ public final class IntervalContract {
         public static final String INTERVAL_SESSION_ID = "interval_session_id";
 
         public static final String LOCATION = "location";
-
+        public static final String DISTANCE = "distance";
         public static final String AVERAGE_VELOCITY = "average_velocity";
 
         public static Uri buildLocationUri(long id) {
@@ -66,11 +66,9 @@ public final class IntervalContract {
          * Primary key.
          */
         public static final String _ID = "_id";
-
         public static final String START_TIME = "start_time";
-
-        public static final String START_LOCATION = "start_location";
-
+        public static final String END_TIME = "end_time";
+        public static final String DISTANCE_TRAVELED = "total_distance";
         public static final String POLY_LINE_DATA = "poly_line_data";
 
 

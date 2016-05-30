@@ -26,7 +26,8 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
             + IntervalContract.LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + " INTEGER NOT NULL, "
             + IntervalContract.LocationEntry.LOCATION + " TEXT, "
-            + IntervalContract.LocationEntry.AVERAGE_VELOCITY + " REAL "
+            + IntervalContract.LocationEntry.AVERAGE_VELOCITY + " REAL, "
+            + IntervalContract.LocationEntry.DISTANCE + " REAL "
             + ", CONSTRAINT fk_interval_session_id FOREIGN KEY (" + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + ") REFERENCES interval_session (_id) ON DELETE CASCADE"
             + " );";
 
@@ -34,7 +35,8 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
             + IntervalContract.SessionEntry.TABLE_NAME + " ( "
             + IntervalContract.SessionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + IntervalContract.SessionEntry.START_TIME + " TEXT, "
-            + IntervalContract.SessionEntry.START_LOCATION + " TEXT, "
+            + IntervalContract.SessionEntry.END_TIME + " TEXT, "
+            + IntervalContract.SessionEntry.DISTANCE_TRAVELED + " REAL, "
             + IntervalContract.SessionEntry.POLY_LINE_DATA + " TEXT "
             + " );";
 
