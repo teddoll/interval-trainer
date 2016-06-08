@@ -18,7 +18,6 @@ import java.util.Arrays;
 import timber.log.Timber;
 
 public class IntervalProvider extends ContentProvider {
-    private static final String TAG = IntervalProvider.class.getSimpleName();
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
 
@@ -66,7 +65,7 @@ public class IntervalProvider extends ContentProvider {
                 // field.setAccessible(true);
                 // field.set(null, true);
             } catch (Throwable t) {
-                Timber.w(TAG, "Could not enable SQLiteDebug logging", t);
+                Timber.w("Could not enable SQLiteDebug logging", t);
             }
         }
         mSqLiteOpenHelper = IntervalSQLiteOpenHelper.getInstance(getContext());
@@ -97,7 +96,7 @@ public class IntervalProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        Timber.d(TAG, "insert uri=" + uri + " values=" + values);
+        Timber.d("insert uri=" + uri + " values=" + values);
         final SQLiteDatabase db = mSqLiteOpenHelper.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
         Uri returnUri;
@@ -142,7 +141,7 @@ public class IntervalProvider extends ContentProvider {
      */
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-        Timber.d(TAG, "NOT SUPPORTED bulkInsert uri=" + uri + " values.length=" + values.length);
+        Timber.d("NOT SUPPORTED bulkInsert uri=" + uri + " values.length=" + values.length);
         return 0;
     }
 
@@ -151,7 +150,7 @@ public class IntervalProvider extends ContentProvider {
      */
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        Timber.d(TAG, "update uri=" + uri + " values=" + values + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs));
+        Timber.d("update uri=" + uri + " values=" + values + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs));
         final SQLiteDatabase db = mSqLiteOpenHelper.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
         int rowsUpdated;
@@ -192,7 +191,7 @@ public class IntervalProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        Timber.d(TAG, "delete uri=" + uri + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs));
+        Timber.d("delete uri=" + uri + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs));
         final SQLiteDatabase db = mSqLiteOpenHelper.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
         int rowsUpdated;
@@ -231,7 +230,7 @@ public class IntervalProvider extends ContentProvider {
 
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Timber.d(TAG, "query uri=" + uri + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs) + " sortOrder=" + sortOrder);
+        Timber.d("query uri=" + uri + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs) + " sortOrder=" + sortOrder);
         final SQLiteDatabase db = mSqLiteOpenHelper.getReadableDatabase();
         Cursor retCursor;
         switch (URI_MATCHER.match(uri)) {
@@ -272,7 +271,8 @@ public class IntervalProvider extends ContentProvider {
             }
             case URI_TYPE_INTERVAL_SET: {
                 retCursor = db.query(IntervalContract.SetEntry.TABLE_NAME,
-                        new String[]{IntervalContract.SetEntry.LABEL,
+                        new String[]{IntervalContract.SetEntry._ID,
+                                IntervalContract.SetEntry.LABEL,
                                 IntervalContract.SetEntry.TIMES,
                                 IntervalContract.SetEntry.TOTAL_TIME},
                         null, null, null, null, null);
@@ -309,7 +309,7 @@ public class IntervalProvider extends ContentProvider {
             values.put(IntervalContract.LocationEntry.DISTANCE,
                     provided.getAsFloat(IntervalContract.LocationEntry.DISTANCE));
         }
-        Timber.d(TAG, "normalizeLocationValues= " + values);
+        Timber.d("normalizeLocationValues= " + values);
         return values;
     }
 
@@ -331,7 +331,7 @@ public class IntervalProvider extends ContentProvider {
             values.put(IntervalContract.SessionEntry.DISTANCE_TRAVELED,
                     provided.getAsFloat(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
         }
-        Timber.d(TAG, "normalizeSessionValues= " + values);
+        Timber.d("normalizeSessionValues= " + values);
         return values;
     }
 
@@ -349,7 +349,7 @@ public class IntervalProvider extends ContentProvider {
             values.put(IntervalContract.SetEntry.TIMES,
                     provided.getAsString(IntervalContract.SetEntry.TIMES));
         }
-        Timber.d(TAG, "normalizeSetValues= " + values);
+        Timber.d("normalizeSetValues= " + values);
         return values;
     }
 }

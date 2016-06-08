@@ -27,12 +27,14 @@ public final class DBStringParseUtil {
             sb.append(serializeLocation(location));
             sb.append("|");
         }
-        sb.deleteCharAt(sb.length() - 1);
+        if(sb.length() > 0) sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
-    public static String serializeLocation(@NonNull Location location) {
-        return String.format(Locale.US, "%.8f,%.8f", location.getLatitude(), location.getLongitude());
+    public static String serializeLocation(Location location) {
+        if(location != null)
+            return String.format(Locale.US, "%.8f,%.8f", location.getLatitude(), location.getLongitude());
+        return "";
     }
 
     public static Location deserializeLocation(@NonNull String rawLocation) {
@@ -54,6 +56,7 @@ public final class DBStringParseUtil {
     }
 
     public static Date deserializeDate(String date) throws ParseException {
+        if(date == null) return null;
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.US);
         format.setTimeZone(TimeZone.getTimeZone("Zulu"));
         return format.parse(date);
@@ -65,16 +68,16 @@ public final class DBStringParseUtil {
         return format.format(date);
     }
 
-    public static List<Long> deserializeSetTimes(String setTimes) {
+    public static List<Integer> deserializeSetTimes(String setTimes) {
         String[] split = setTimes.split(",");
-        List<Long> times = new ArrayList<>(split.length);
+        List<Integer> times = new ArrayList<>(split.length);
         for(int i = 0; i < split.length; i++) {
-            times.add(Long.parseLong(split[i]));
+            times.add(Integer.parseInt(split[i]));
         }
         return times;
     }
 
-    public static String serializeSetTimes(List<Long> setTimes) {
+    public static String serializeSetTimes(List<Integer> setTimes) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < setTimes.size(); i++) {
             sb.append(setTimes.get(i));

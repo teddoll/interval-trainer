@@ -87,7 +87,7 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mListView.setAdapter(null);
     }
 
 
@@ -125,9 +125,9 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
                 float distanceInMeters = cursor.getFloat(
                         cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
-                vh.date.setText(mDateFormat.format(start));
-                vh.time.setText((end.getTime() - start.getTime())/ 60000 + " m"  );
-                vh.distance.setText(String.format(Locale.US, "%0.2f m",
+                if(start != null) vh.date.setText(mDateFormat.format(start));
+                if(start != null && end != null) vh.time.setText((end.getTime() - start.getTime())/ 60000 + " m"  );
+                vh.distance.setText(String.format(Locale.US, "%.2f m",
                         UnitsUtil.metersToMiles(distanceInMeters)));
             } catch (ParseException e) {
                 e.printStackTrace();

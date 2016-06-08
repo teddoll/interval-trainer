@@ -1,11 +1,36 @@
 <resources>
     <string name="app_name">Interval Trainer</string>
+    <string name="affinity">com.teddoll.fitness.intervaltrainer</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_tracking">TrackingActivity</string>
     <string name="get_started">Lets get Started</string>
     <string name="session_complete">Session Complete</string>
-    <string name="time_format">$1$d.%2$d</string>
+    <string name="time_format">%1$d.%2$d</string>
     <string name="distance_format">Distance: %1$.2f</string>
 
     <string name="empty_sessions">You don\'t have any Sessions saved. Pressed the play button below to get started.</string>
+
+    <string name="set_selection_title">Select</string>
+    <string name="name_hint">Name your interval set</string>
+    <string name="name_label">Name:</string>
+    <string name="total_format">Total Time: %1$d minutes</string>
+    <string name="minute_format">%1$d minutes</string>
+    <string name="minute_string_format">%1$s minutes</string>
+    <string name="copy_title">copy</string>
+    <string name="paste_title">paste</string>
+    <string name="save_title">save</string>
+    <string name="delete_title">delete</string>
+    <string name="edit_title">Edit</string>
+    <string name="add_title">Add</string>
+    <string name="notification_started">Training started</string>
+    <string name="notification_update">%1$d minute interval hit</string>
+    <string name="notification_end">Training complete</string>
+    <string name="item_time_format">"%1$d minutes"</string>
+    <string name="copy_dialog_title">Copy Times</string>
+    <string name="copy_label">Copy</string>
+    <string name="set_interval_title">Interval Time</string>
+    <string name="set_interval_message">Select interval time in minutes</string>
+    <string name="set_interval_confirm">Add</string>
+    <string name="location_rationale">Interval Trainer requires location tracking to function. Please enable Location permissions</string>
+    <string name="location_rationale_positive">Settings</string>
 </resources>

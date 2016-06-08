@@ -1,14 +1,15 @@
 package com.teddoll.fitness.intervaltrainer.session;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.teddoll.fitness.intervaltrainer.R;
+import com.teddoll.fitness.intervaltrainer.set.SetSelectionActivity;
 
 import timber.log.Timber;
 
@@ -27,8 +28,7 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         findViewById(R.id.go).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO launch run activity
-                Toast.makeText(LandingActivity.this, "GO CLick", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LandingActivity.this, SetSelectionActivity.class));
             }
         });
 
