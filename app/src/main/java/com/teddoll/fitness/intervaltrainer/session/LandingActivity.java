@@ -15,13 +15,13 @@ import timber.log.Timber;
 
 public class LandingActivity extends AppCompatActivity implements SessionSelectionListener {
 
+    private SessionDetailFragment mSessionDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        Timber.tag("LandingActivity");
-        Timber.d("Activity Created");
+        Timber.d("onCreate");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,9 +31,12 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
                 startActivity(new Intent(LandingActivity.this, SetSelectionActivity.class));
             }
         });
-
+        mSessionDetailFragment = (SessionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.session_detail_fragment);
+        if(mSessionDetailFragment != null && !mSessionDetailFragment.isInLayout()) {
+            Timber.d("onCreate clearing mSessionDetailFragment");
+            mSessionDetailFragment = null;
+        }
     }
-
 
 
     @Override
@@ -59,7 +62,27 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
     }
 
     @Override
-    public void onSessionSelected(int sessionId) {
+    public void onSessionSelected(long sessionId) {
+        Timber.d("onSessionSelected");
+        if (mSessionDetailFragment != null) {
+            mSessionDetailFragment.onSessionIdChange(sessionId);
+        } else {
+            Intent i = new Intent(this, SessionDetailActivity.class);
+            i.putExtra("sessionId", sessionId);
+            startActivity(i);
+        }
+    }
 
+    @Override
+    public void onSessionReady(long sessionId) {
+        Timber.d("onSessionReady");
+        if (mSessionDetailFragment != null) {
+            mSessionDetailFragment.onSessionIdChange(sessionId);
+        }
+    }
+
+    @Override
+    public boolean shouldHighlightItem() {
+        return mSessionDetailFragment != null;
     }
 }

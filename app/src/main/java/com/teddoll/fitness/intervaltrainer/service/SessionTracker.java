@@ -8,37 +8,47 @@ import android.os.SystemClock;
  */
 public final class SessionTracker {
 
+    public static final int UPPER_VELOCITY_BOUND = 100;
+
     private long mTime;
     private Location mLocation;
     private double mVelocity;
     private double mDistance;
     private double mLastTrackedDistance;
 
-    public void start(Location location) {
+    public void start() {
         mTime = SystemClock.uptimeMillis();
-        mLocation = location;
         mVelocity = 0d;
         mDistance = 0d;
         mLastTrackedDistance = 0d;
     }
 
     public synchronized void update(Location location) {
-        long current = SystemClock.uptimeMillis();
-        long deltaInSeconds = (current - mTime) / 1000;
-        double distance = distance(mLocation.getLatitude(),
-                mLocation.getLongitude(), mLocation.getAltitude(),
-                location.getLatitude(), location.getLongitude(), location.getAltitude());
+        if(mLocation != null) {
+            long current = SystemClock.uptimeMillis();
+            long deltaInSeconds = (current - mTime) / 1000;
+            double distance = distance(mLocation.getLatitude(),
+                    mLocation.getLongitude(), mLocation.getAltitude(),
+                    location.getLatitude(), location.getLongitude(), location.getAltitude());
 
-        double velocity = distance / deltaInSeconds;
-        if(mVelocity == 0) {
-            mVelocity = velocity;
-            mDistance = distance;
+            double velocity = distance / deltaInSeconds;
+
+            mLocation = location;
+            mTime = current;
+
+            // Faster than expected Location must have jumped.
+            if(velocity > UPPER_VELOCITY_BOUND) return;
+            if(mVelocity == 0) {
+                mVelocity = velocity;
+                mDistance = distance;
+            } else {
+                mVelocity = (mVelocity + velocity) / 2;
+                mDistance += distance;
+            }
+
         } else {
-            mVelocity = (mVelocity + velocity) / 2;
-            mDistance += distance;
+            mLocation = location;
         }
-        mLocation = location;
-        mTime = current;
 
 
     }

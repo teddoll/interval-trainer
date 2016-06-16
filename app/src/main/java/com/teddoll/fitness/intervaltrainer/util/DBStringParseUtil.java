@@ -38,6 +38,7 @@ public final class DBStringParseUtil {
     }
 
     public static Location deserializeLocation(@NonNull String rawLocation) {
+        if(rawLocation.isEmpty()) return null;
         String[] split = rawLocation.split(",");
         Location location = new Location("DBStringParseUtil");
         location.setLatitude(Double.parseDouble(split[0]));
@@ -47,7 +48,7 @@ public final class DBStringParseUtil {
     }
 
     public static List<Location> deserializeLocations(@NonNull String rawLocations) {
-        String[] split = rawLocations.split("|");
+        String[] split = rawLocations.split("\\|");
         List<Location> locations = new ArrayList<>(split.length);
         for(int i = 0; i < split.length; i++) {
             locations.add(deserializeLocation(split[i]));

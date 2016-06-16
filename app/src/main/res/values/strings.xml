@@ -33,4 +33,9 @@
     <string name="set_interval_confirm">Add</string>
     <string name="location_rationale">Interval Trainer requires location tracking to function. Please enable Location permissions</string>
     <string name="location_rationale_positive">Settings</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="mph">%1$.2f mph</string>
+    <string name="miles">%1$.2f miles</string>
+    <string name="minutes">%1$.2f minutes</string>
+    <string name="select_a_session">Please select a session to continue.</string>
 </resources>

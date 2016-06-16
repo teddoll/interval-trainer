@@ -5,5 +5,7 @@ package com.teddoll.fitness.intervaltrainer.session;
  */
 public interface SessionSelectionListener {
 
-    void onSessionSelected(int sessionId);
+    void onSessionSelected(long sessionId);
+    void onSessionReady(long sessionId);
+    boolean shouldHighlightItem();
 }

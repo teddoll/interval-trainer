@@ -1,0 +1,19 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=46:C9:1D:AF:F6:C7:C0:4E:1D:73:0C:38:EE:91:6F:15:1D:DA:E9:3A%3Bcom.teddoll.fitness.intervaltrainer.session
+
+    You can also add your credentials to an existing key, using this line:
+    46:C9:1D:AF:F6:C7:C0:4E:1D:73:0C:38:EE:91:6F:15:1D:DA:E9:3A;com.teddoll.fitness.intervaltrainer.session
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAn9V6HglcxlmvI9tsm6F9fGIfeJ7zpT7c</string>
+</resources>

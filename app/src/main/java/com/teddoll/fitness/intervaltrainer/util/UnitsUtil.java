@@ -6,7 +6,11 @@ package com.teddoll.fitness.intervaltrainer.util;
 public class UnitsUtil {
 
 
-    public static float metersToMiles(float meters) {
+    public static double metersToMiles(double meters) {
         return meters * 0.00062137f;
+    }
+
+    public static double metersPerSecondToMilesPerHour(double ms) {
+        return ms * 2.23694f;
     }
 }

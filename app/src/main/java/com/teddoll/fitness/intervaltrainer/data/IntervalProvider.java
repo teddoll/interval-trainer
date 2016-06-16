@@ -233,12 +233,23 @@ public class IntervalProvider extends ContentProvider {
         Timber.d("query uri=" + uri + " selection=" + selection + " selectionArgs=" + Arrays.toString(selectionArgs) + " sortOrder=" + sortOrder);
         final SQLiteDatabase db = mSqLiteOpenHelper.getReadableDatabase();
         Cursor retCursor;
-        switch (URI_MATCHER.match(uri)) {
+        int match = URI_MATCHER.match(uri);
+        switch (match) {
             case URI_TYPE_INTERVAL_LOCATION: {
+                String id = null;
+                if(selectionArgs != null && selectionArgs.length > 0) {
+                    id = selectionArgs[0];
+                }
                 retCursor = db.query(IntervalContract.LocationEntry.TABLE_NAME,
-                        new String[]{IntervalContract.LocationEntry.LOCATION,
+                        new String[]{
+                                IntervalContract.LocationEntry._ID,
+                                IntervalContract.LocationEntry.LOCATION,
+                                IntervalContract.LocationEntry.DISTANCE,
                                 IntervalContract.LocationEntry.AVERAGE_VELOCITY},
-                        null, null, null, null, null);
+
+                        id != null? IntervalContract.LocationEntry.INTERVAL_SESSION_ID+"=?": null,
+                        id != null? new String[] {id}: null,
+                        null, null, null);
                 break;
             }
             case URI_TYPE_INTERVAL_SESSION_ID: {

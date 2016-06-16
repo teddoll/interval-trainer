@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
     private ListView mListView;
     private SessionSelectionListener mListener;
+    private int mSelected;
 
 
     @Override
@@ -53,6 +55,20 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
         View view = inflater.inflate(R.layout.fragment_session_list, container, false);
         mListView = (ListView) view.findViewById(R.id.list);
         mListView.setEmptyView(view.findViewById(R.id.empty));
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mSelected = i;
+                ((SessionAdapter) mListView.getAdapter()).setSelected(mSelected);
+                Cursor cur = (Cursor) adapterView.getAdapter().getItem(i);
+                cur.moveToPosition(i);
+                int id = cur.getInt(cur.getColumnIndex(IntervalContract.SessionEntry._ID));
+                if (mListener != null) {
+                    mListener.onSessionSelected(id);
+                }
+
+            }
+        });
 
         return view;
 
@@ -72,6 +88,7 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Timber.d("onCreateLoader");
         return new CursorLoader(getContext(),
                 IntervalContract.SessionEntry.CONTENT_URI,
                 null,
@@ -82,11 +99,18 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mListView.setAdapter(new SessionAdapter(getContext(), data));
+        Timber.d("onLoadFinished");
+        if (data != null && data.moveToPosition(mSelected)) {
+            mListener.onSessionReady(data.getLong(data.getColumnIndex(IntervalContract.SessionEntry._ID)));
+            SessionAdapter adapter = new SessionAdapter(getContext(), data, mListener.shouldHighlightItem());
+            mListView.setAdapter(adapter);
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Timber.d("onLoaderReset");
         mListView.setAdapter(null);
     }
 
@@ -96,11 +120,20 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
         public static final String DATE_FORMAT = "MMM dd";
 
         private SimpleDateFormat mDateFormat;
-        public SessionAdapter(@NonNull Context context, @NonNull Cursor cursor) {
+        private int mSelected;
+        private boolean mShouldSelect;
+
+        public SessionAdapter(@NonNull Context context, @NonNull Cursor cursor, boolean shouldSelect) {
             super(context, cursor, 0);
             mDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+            mSelected = 0;
+            mShouldSelect = shouldSelect;
         }
 
+        public void setSelected(int i) {
+            mSelected = i;
+            notifyDataSetChanged();
+        }
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_session, viewGroup, false);
@@ -114,6 +147,12 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
+            int position = cursor.getPosition();
+            if(position == mSelected && mShouldSelect) {
+                view.setBackgroundColor(getResources().getColor(R.color.list_selected));
+            } else {
+                view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            }
             ViewHolder vh = (ViewHolder) view.getTag();
             try {
                 Date start = DBStringParseUtil.deserializeDate(
@@ -125,9 +164,11 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
                 float distanceInMeters = cursor.getFloat(
                         cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
-                if(start != null) vh.date.setText(mDateFormat.format(start));
-                if(start != null && end != null) vh.time.setText((end.getTime() - start.getTime())/ 60000 + " m"  );
-                vh.distance.setText(String.format(Locale.US, "%.2f m",
+                if (start != null) vh.date.setText(mDateFormat.format(start));
+                if (start != null && end != null) vh.time.setText(getString(
+                        R.string.minutes, (end.getTime() - start.getTime()) / 60000f));
+
+                vh.distance.setText(getString(R.string.miles,
                         UnitsUtil.metersToMiles(distanceInMeters)));
             } catch (ParseException e) {
                 e.printStackTrace();

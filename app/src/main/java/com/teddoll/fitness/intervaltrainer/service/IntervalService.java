@@ -117,7 +117,7 @@ public class IntervalService extends Service implements LocationListener {
             switch (msg.what) {
                 case MSG_REGISTER_CLIENT:
                     mClients.add(msg.replyTo);
-                    if(!mIsStarted) {
+                    if (!mIsStarted) {
                         Message m = Message.obtain(null,
                                 MSG_READY);
                         try {
@@ -183,7 +183,7 @@ public class IntervalService extends Service implements LocationListener {
     public void onDestroy() {
         Timber.d("onDestroy");
         super.onDestroy();
-        if(mIsStarted) end();
+        if (mIsStarted) end();
     }
 
 
@@ -256,19 +256,16 @@ public class IntervalService extends Service implements LocationListener {
 
 
         try {
-            Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            storeInitialIntervalSession(currentLocation);
-            mRunningLocationString = DBStringParseUtil.serializeLocation(currentLocation);
+            mRunningLocationString = "";
             mVelocityTracker = new SessionTracker();
-            mVelocityTracker.start(currentLocation);
-            time();
-
+            mVelocityTracker.start();
 
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, locationRequest, IntervalService.this);
-
+            storeInitialIntervalSession();
+            time();
         } catch (SecurityException e) {
-            //TODO send error broadcast.
+            end();
             stopSelf();
         }
 
@@ -425,14 +422,13 @@ public class IntervalService extends Service implements LocationListener {
     }
 
 
-    private void storeInitialIntervalSession(Location location) {
+    private void storeInitialIntervalSession() {
         Date date = new Date();
         ContentValues values = new ContentValues();
-        String serialLocation = DBStringParseUtil.serializeLocation(location);
         values.put(IntervalContract.SessionEntry.START_TIME,
                 DBStringParseUtil.serializeDate(date));
         values.put(IntervalContract.SessionEntry.POLY_LINE_DATA,
-                serialLocation);
+                "");
         Uri uri = getContentResolver().insert(IntervalContract.SessionEntry.CONTENT_URI, values);
         if (uri != null) {
             mSessionId = Integer.parseInt(uri.getPathSegments().get(1));
@@ -456,7 +452,8 @@ public class IntervalService extends Service implements LocationListener {
     }
 
     private void flushLocationBuffer() {
-        mRunningLocationString += "|" + DBStringParseUtil.serializeLocations(mLocationsBuffer);
+        if (!mRunningLocationString.isEmpty()) mRunningLocationString += "|";
+        mRunningLocationString += DBStringParseUtil.serializeLocations(mLocationsBuffer);
         Date date = new Date();
 
         ContentValues vals = new ContentValues();
