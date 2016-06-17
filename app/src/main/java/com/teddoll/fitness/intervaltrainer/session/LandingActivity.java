@@ -2,6 +2,7 @@ package com.teddoll.fitness.intervaltrainer.session;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import timber.log.Timber;
 public class LandingActivity extends AppCompatActivity implements SessionSelectionListener {
 
     private SessionDetailFragment mSessionDetailFragment;
+    private SessionListFragment mSessionListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +33,29 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
                 startActivity(new Intent(LandingActivity.this, SetSelectionActivity.class));
             }
         });
-        mSessionDetailFragment = (SessionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.session_detail_fragment);
-        if(mSessionDetailFragment != null && !mSessionDetailFragment.isInLayout()) {
-            Timber.d("onCreate clearing mSessionDetailFragment");
-            mSessionDetailFragment = null;
+        FragmentManager fm = getSupportFragmentManager();
+        int selected = 0;
+        boolean showHighlight = false;
+        if(findViewById(R.id.detail_container) != null) {
+            showHighlight = true;
+            mSessionDetailFragment = SessionDetailFragment.newInstance(-1);
+            fm.beginTransaction().replace(R.id.detail_container,
+                    mSessionDetailFragment, "DETAIL").commit();
         }
+        if(savedInstanceState != null) {
+            selected = savedInstanceState.getInt("selected", 0);
+        }
+        mSessionListFragment = SessionListFragment.newInstance(selected, showHighlight);
+        fm.beginTransaction().replace(R.id.list_container,
+                mSessionListFragment, "LIST").commit();
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("selected", mSessionListFragment.getSelected());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,10 +97,5 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         if (mSessionDetailFragment != null) {
             mSessionDetailFragment.onSessionIdChange(sessionId);
         }
-    }
-
-    @Override
-    public boolean shouldHighlightItem() {
-        return mSessionDetailFragment != null;
     }
 }

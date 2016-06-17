@@ -40,7 +40,27 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
     private ListView mListView;
     private SessionSelectionListener mListener;
     private int mSelected;
+    private boolean mShouldHighlight;
 
+
+    public static SessionListFragment newInstance(int selected, boolean shouldHighlight) {
+        SessionListFragment fragment = new SessionListFragment();
+        Bundle args = new Bundle();
+        args.putInt("selected", selected);
+        args.putBoolean("shouldHighlight", shouldHighlight);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public SessionListFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSelected = getArguments().getInt("selected", 0);
+        mShouldHighlight = getArguments().getBoolean("shouldHighlight", false);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -100,9 +120,14 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("onLoadFinished");
-        if (data != null && data.moveToPosition(mSelected)) {
+        if (data != null && data.getCount() > 0) {
+            if(mSelected < 0 || mSelected >= data.getCount() ) {
+                mSelected = 0;
+            }
+            data.moveToPosition(mSelected);
             mListener.onSessionReady(data.getLong(data.getColumnIndex(IntervalContract.SessionEntry._ID)));
-            SessionAdapter adapter = new SessionAdapter(getContext(), data, mListener.shouldHighlightItem());
+            SessionAdapter adapter = new SessionAdapter(getContext(), data, mShouldHighlight);
+            adapter.setSelected(mSelected);
             mListView.setAdapter(adapter);
         }
 
@@ -114,8 +139,12 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
         mListView.setAdapter(null);
     }
 
+    public int getSelected() {
+        return mSelected;
+    }
 
-    class SessionAdapter extends CursorAdapter {
+
+    static class SessionAdapter extends CursorAdapter {
 
         public static final String DATE_FORMAT = "MMM dd";
 
@@ -134,6 +163,7 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
             mSelected = i;
             notifyDataSetChanged();
         }
+
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_session, viewGroup, false);
@@ -148,10 +178,9 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             int position = cursor.getPosition();
-            if(position == mSelected && mShouldSelect) {
-                view.setBackgroundColor(getResources().getColor(R.color.list_selected));
-            } else {
-                view.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            view.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+            if (position == mSelected && mShouldSelect) {
+                view.setBackgroundColor(context.getResources().getColor(R.color.list_selected));
             }
             ViewHolder vh = (ViewHolder) view.getTag();
             try {
@@ -165,22 +194,23 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
                         cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
                 if (start != null) vh.date.setText(mDateFormat.format(start));
-                if (start != null && end != null) vh.time.setText(getString(
+                if (start != null && end != null) vh.time.setText(context.getString(
                         R.string.minutes, (end.getTime() - start.getTime()) / 60000f));
 
-                vh.distance.setText(getString(R.string.miles,
+                vh.distance.setText(context.getString(R.string.miles,
                         UnitsUtil.metersToMiles(distanceInMeters)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
         }
+
+        class ViewHolder {
+            TextView date;
+            TextView time;
+            TextView distance;
+        }
     }
 
-    class ViewHolder {
-        TextView date;
-        TextView time;
-        TextView distance;
-    }
 
 }

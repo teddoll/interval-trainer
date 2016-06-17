@@ -34,23 +34,18 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </android.support.design.widget.AppBarLayout>
-
-            <fragment
-                android:id="@+id/session_list_fragment"
-                android:name="com.teddoll.fitness.intervaltrainer.session.SessionListFragment"
+            <FrameLayout
+                android:id="@+id/list_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:layout="@layout/fragment_session_list" />
+                android:layout_height="match_parent" />
+
         </LinearLayout>
 
-        <fragment
-            android:id="@+id/session_detail_fragment"
-            android:name="com.teddoll.fitness.intervaltrainer.session.SessionDetailFragment"
+        <FrameLayout
+            android:id="@+id/detail_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            tools:layout="@layout/fragment_session_detail" />
+            android:layout_weight="2" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
