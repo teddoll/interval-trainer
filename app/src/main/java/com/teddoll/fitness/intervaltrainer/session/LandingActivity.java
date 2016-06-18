@@ -3,6 +3,7 @@ package com.teddoll.fitness.intervaltrainer.session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.teddoll.fitness.intervaltrainer.R;
+import com.teddoll.fitness.intervaltrainer.prefs.AppPrefs;
+import com.teddoll.fitness.intervaltrainer.receiver.TipReceiver;
 import com.teddoll.fitness.intervaltrainer.set.SetSelectionActivity;
 
 import timber.log.Timber;
@@ -18,12 +21,14 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
 
     private SessionDetailFragment mSessionDetailFragment;
     private SessionListFragment mSessionListFragment;
+    private AppPrefs mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
         Timber.d("onCreate");
+        mPrefs = AppPrefs.getInstance(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,7 +53,23 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         mSessionListFragment = SessionListFragment.newInstance(selected, showHighlight);
         fm.beginTransaction().replace(R.id.list_container,
                 mSessionListFragment, "LIST").commit();
+        TipReceiver.startTipTimer(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        long last = mPrefs.getLastTipTime();
+        long now = System.currentTimeMillis();
+        if(now - last > AppPrefs.TIP_DELTA_DISPLAY_TIME) {
+            String tip = mPrefs.getTip();
+            mPrefs.setLastTipTime(now);
+            new AlertDialog.Builder(this)
+                    .setMessage(tip)
+                    .setNeutralButton(android.R.string.ok, null)
+                    .show();
+        }
     }
 
     @Override

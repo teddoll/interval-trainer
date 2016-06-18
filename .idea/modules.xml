@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IntervalTrainer.iml" filepath="$PROJECT_DIR$/IntervalTrainer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tipbackend/tipbackend.iml" filepath="$PROJECT_DIR$/tipbackend/tipbackend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tiplibrary/tiplibrary.iml" filepath="$PROJECT_DIR$/tiplibrary/tiplibrary.iml" />
     </modules>
   </component>
 </project>
