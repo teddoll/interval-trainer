@@ -234,6 +234,7 @@ public class SessionDetailFragment extends Fragment implements LoaderManager.Loa
             mMap.clear();
             PolylineOptions opts = new PolylineOptions();
             for (Location l : mPLineLocations) {
+                if(l == null) continue;
                 opts.add(new LatLng(l.getLatitude(), l.getLongitude()));
             }
             DisplayMetrics metrics = getResources().getDisplayMetrics();
