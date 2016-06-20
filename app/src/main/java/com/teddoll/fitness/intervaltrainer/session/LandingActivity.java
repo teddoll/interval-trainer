@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.teddoll.fitness.intervaltrainer.R;
 import com.teddoll.fitness.intervaltrainer.prefs.AppPrefs;
-import com.teddoll.fitness.intervaltrainer.receiver.TipReceiver;
 import com.teddoll.fitness.intervaltrainer.set.SetSelectionActivity;
 
 import timber.log.Timber;
@@ -53,7 +52,6 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         mSessionListFragment = SessionListFragment.newInstance(selected, showHighlight);
         fm.beginTransaction().replace(R.id.list_container,
                 mSessionListFragment, "LIST").commit();
-        TipReceiver.startTipTimer(this);
 
     }
 

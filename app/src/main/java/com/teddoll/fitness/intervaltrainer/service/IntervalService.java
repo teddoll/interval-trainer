@@ -384,6 +384,8 @@ public class IntervalService extends Service implements LocationListener {
                 mClients.remove(i);
             }
         }
+        //Update Widgets.
+        startService(new Intent(this, TipService.class));
         stopForeground(true);
         stopSelf();
 

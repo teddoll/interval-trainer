@@ -47,6 +47,7 @@
                     android:text="Session Times" />
 
                 <ImageView
+                    android:contentDescription="@string/expand_desc"
                     android:id="@+id/expand_list"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -57,6 +58,7 @@
                     android:src="@drawable/ic_expand_less_black_24dp" />
 
                 <ImageView
+                    android:contentDescription="@string/collapse_session_desc"
                     android:id="@+id/collapse_list"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

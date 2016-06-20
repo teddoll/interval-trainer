@@ -22,7 +22,6 @@ import com.teddoll.fitness.intervaltrainer.data.IntervalContract;
 import com.teddoll.fitness.intervaltrainer.util.DBStringParseUtil;
 import com.teddoll.fitness.intervaltrainer.util.UnitsUtil;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -63,11 +62,15 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(SESSION_LOADER, null, this);
+    public void onResume() {
+        super.onResume();
+        LoaderManager lm = getLoaderManager();
+        if(lm.getLoader(SESSION_LOADER) != null) {
+            lm.restartLoader(SESSION_LOADER, null, this);
+            return;
+        }
+        lm.initLoader(SESSION_LOADER, null, this);
     }
-
 
     @Nullable
     @Override
@@ -121,7 +124,7 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("onLoadFinished");
         if (data != null && data.getCount() > 0) {
-            if(mSelected < 0 || mSelected >= data.getCount() ) {
+            if (mSelected < 0 || mSelected >= data.getCount()) {
                 mSelected = 0;
             }
             data.moveToPosition(mSelected);
@@ -183,25 +186,22 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
                 view.setBackgroundColor(context.getResources().getColor(R.color.list_selected));
             }
             ViewHolder vh = (ViewHolder) view.getTag();
-            try {
-                Date start = DBStringParseUtil.deserializeDate(
-                        cursor.getString(
-                                cursor.getColumnIndex(IntervalContract.SessionEntry.START_TIME)));
-                Date end = DBStringParseUtil.deserializeDate(
-                        cursor.getString(
-                                cursor.getColumnIndex(IntervalContract.SessionEntry.END_TIME)));
-                float distanceInMeters = cursor.getFloat(
-                        cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
-                if (start != null) vh.date.setText(mDateFormat.format(start));
-                if (start != null && end != null) vh.time.setText(context.getString(
-                        R.string.minutes, (end.getTime() - start.getTime()) / 60000f));
+            Date start = DBStringParseUtil.deserializeDate(
+                    cursor.getString(
+                            cursor.getColumnIndex(IntervalContract.SessionEntry.START_TIME)));
+            Date end = DBStringParseUtil.deserializeDate(
+                    cursor.getString(
+                            cursor.getColumnIndex(IntervalContract.SessionEntry.END_TIME)));
+            float distanceInMeters = cursor.getFloat(
+                    cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
-                vh.distance.setText(context.getString(R.string.miles,
-                        UnitsUtil.metersToMiles(distanceInMeters)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            if (start != null) vh.date.setText(mDateFormat.format(start));
+            if (start != null && end != null) vh.time.setText(context.getString(
+                    R.string.minutes, (end.getTime() - start.getTime()) / 60000f));
+
+            vh.distance.setText(context.getString(R.string.miles,
+                    UnitsUtil.metersToMiles(distanceInMeters)));
 
         }
 

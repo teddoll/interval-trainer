@@ -38,4 +38,9 @@
     <string name="miles">%1$.2f miles</string>
     <string name="minutes">%1$.2f minutes</string>
     <string name="select_a_session">Please select a session to continue.</string>
+    <string name="edit_desc">Edit</string>
+    <string name="expand_desc">Expand session times</string>
+    <string name="collapse_session_desc">Collapse session times</string>
+    <string name="widget_title">Last Session:</string>
+    <string name="no_records">No Records</string>
 </resources>
