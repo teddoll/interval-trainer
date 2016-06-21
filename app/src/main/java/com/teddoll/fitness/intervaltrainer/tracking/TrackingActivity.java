@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.teddoll.fitness.intervaltrainer.R;
 import com.teddoll.fitness.intervaltrainer.service.IntervalService;
+import com.teddoll.fitness.intervaltrainer.session.LandingActivity;
 import com.teddoll.fitness.intervaltrainer.util.UnitsUtil;
 
 import java.util.Arrays;
@@ -234,10 +235,10 @@ public class TrackingActivity extends AppCompatActivity {
                             UnitsUtil.metersToMiles((float) msg.arg2)));
                     break;
                 case IntervalService.MSG_COMPLETE:
-                    updateState(false);
-                    mTimeTextView.setText(R.string.session_complete);
-                    mDistanceTextView.setText(mContext.getString(R.string.distance_format,
-                            UnitsUtil.metersToMiles((float) msg.arg2)));
+                    Intent landing = new Intent(TrackingActivity.this, LandingActivity.class);
+                    landing.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(landing);
+                    finish();
                     break;
                 default:
                     super.handleMessage(msg);

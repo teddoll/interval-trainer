@@ -435,7 +435,7 @@ public class IntervalService extends Service implements LocationListener {
         if (uri != null) {
             mSessionId = Integer.parseInt(uri.getPathSegments().get(1));
         } else {
-            //TODO error handle.
+            end();
         }
     }
 
@@ -445,10 +445,13 @@ public class IntervalService extends Service implements LocationListener {
     }
 
     private synchronized void appendToLocationBuffer(Location location) {
-        mVelocityTracker.update(location);
-        mLocationsBuffer.add(location);
-        if (mLocationsBuffer.size() >= 10) {
-            flushLocationBuffer();
+        Timber.d("Location accuracy: " + location.getAccuracy());
+        if(location.getAccuracy() <= 10) {
+            mVelocityTracker.update(location);
+            mLocationsBuffer.add(location);
+            if (mLocationsBuffer.size() >= 10) {
+                flushLocationBuffer();
+            }
         }
 
     }
