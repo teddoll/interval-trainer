@@ -31,22 +31,25 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        findViewById(R.id.go).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LandingActivity.this, SetSelectionActivity.class));
-            }
-        });
+        View go = findViewById(R.id.go);
+        if (go != null) {
+            go.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(LandingActivity.this, SetSelectionActivity.class));
+                }
+            });
+        }
         FragmentManager fm = getSupportFragmentManager();
         int selected = 0;
         boolean showHighlight = false;
-        if(findViewById(R.id.detail_container) != null) {
+        if (findViewById(R.id.detail_container) != null) {
             showHighlight = true;
             mSessionDetailFragment = SessionDetailFragment.newInstance(-1);
             fm.beginTransaction().replace(R.id.detail_container,
                     mSessionDetailFragment, "DETAIL").commit();
         }
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             selected = savedInstanceState.getInt("selected", 0);
         }
         mSessionListFragment = SessionListFragment.newInstance(selected, showHighlight);
@@ -60,7 +63,7 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         super.onResume();
         long last = mPrefs.getLastTipTime();
         long now = System.currentTimeMillis();
-        if(now - last > AppPrefs.TIP_DELTA_DISPLAY_TIME) {
+        if (now - last > AppPrefs.TIP_DELTA_DISPLAY_TIME) {
             String tip = mPrefs.getTip();
             mPrefs.setLastTipTime(now);
             new AlertDialog.Builder(this)

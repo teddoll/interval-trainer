@@ -5,7 +5,7 @@ import android.location.Location;
 /**
  * Created by teddydoll on 6/10/16.
  */
-public class SessionInterval {
+class SessionInterval {
 
     public final Location location;
     public final double distance;

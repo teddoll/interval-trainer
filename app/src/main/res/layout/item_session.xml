@@ -2,9 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/list_selector"
     android:paddingLeft="8dp"
-    android:paddingStart="8dp">
+    android:paddingStart="8dp"
+    android:paddingRight="4dp"
+    android:paddingEnd="4dp">
 
     <TextView
         android:id="@+id/date"
@@ -14,7 +17,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:text="Feb 2nd" />
+        tools:text="Feb 2nd" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -31,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="30 min" />
+            tools:text="30 min" />
 
         <TextView
             android:id="@+id/distance"
@@ -39,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="5 ml" />
+            tools:text="5 ml" />
 
     </LinearLayout>
 

@@ -67,7 +67,7 @@ public class TipReceiver extends AppWidgetProvider {
         }
     }
 
-    public static String getDaySuffix(Date date) {
+    private static String getDaySuffix(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int day = cal.get(Calendar.DAY_OF_MONTH);

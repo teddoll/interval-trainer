@@ -43,12 +43,15 @@ public class SetSelectionActivity extends AppCompatActivity implements LoaderMan
         Timber.d("Activity Created");
         mListView = (ListView) findViewById(R.id.list);
         mListView.setEmptyView(findViewById(R.id.empty));
-        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SetSelectionActivity.this, EditActivity.class));
-            }
-        });
+        View add = findViewById(R.id.add);
+        if (add != null) {
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(SetSelectionActivity.this, EditActivity.class));
+                }
+            });
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -111,7 +114,7 @@ public class SetSelectionActivity extends AppCompatActivity implements LoaderMan
             void onItemClick(int id);
         }
 
-        private SetAdapterListener mListener;
+        private final SetAdapterListener mListener;
 
         public SetAdapter(Context context, Cursor cursor, SetAdapterListener listener) {
             super(context, cursor, 0);

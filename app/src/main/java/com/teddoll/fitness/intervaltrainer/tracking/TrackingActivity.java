@@ -94,7 +94,7 @@ public class TrackingActivity extends AppCompatActivity {
 
         mDistance.setText("");
         mTime.setText(R.string.get_started);
-        mStarted = true;
+        mStarted = true; //Set to true so update state will flip.
         updateState(false);
 
     }
@@ -184,7 +184,7 @@ public class TrackingActivity extends AppCompatActivity {
     protected void onResume() {
         Timber.d("onResume");
         super.onResume();
-        mHandler = new IncomingHandler(this, mTime, mDistance);
+        mHandler = new IncomingHandler(this);
         mMessenger = new Messenger(mHandler);
         loadServiceConnection();
         doBindService();
@@ -202,49 +202,56 @@ public class TrackingActivity extends AppCompatActivity {
     /**
      * Handler of incoming messages from service.
      */
-    class IncomingHandler extends Handler {
+    static class IncomingHandler extends Handler {
 
-        private Context mContext;
-        private TextView mTimeTextView;
-        private TextView mDistanceTextView;
+        private TrackingActivity mActivity;
 
-        IncomingHandler(Context context, TextView time, TextView distance) {
+
+        IncomingHandler(TrackingActivity activity) {
             super();
-            mContext = context;
-            mTimeTextView = time;
-            mDistanceTextView = distance;
+            mActivity = activity;
         }
 
         public void clear() {
-            mContext = null;
-            mTimeTextView = null;
-            mDistanceTextView = null;
+           mActivity = null;
         }
 
         @Override
         public void handleMessage(Message msg) {
-            if (mContext == null) return;
+            Timber.d("ACTIVITY: handleMessage: " + msg.what);
+            if (mActivity == null) return;
             switch (msg.what) {
                 case IntervalService.MSG_UPDATE:
-                    updateState(true);
+                    mActivity.updateState(true);
                     int timeMilli = msg.arg1;
                     int minute = timeMilli / 60000;
                     int sec = timeMilli / 1000;
-                    mTimeTextView.setText(mContext.getString(R.string.time_format, minute, sec));
-                    mDistanceTextView.setText(mContext.getString(R.string.distance_format,
+                    mActivity.mTime.setText(mActivity.getString(R.string.time_format, minute, sec));
+                    mActivity.mDistance.setText(mActivity.getString(R.string.distance_format,
                             UnitsUtil.metersToMiles((float) msg.arg2)));
                     break;
                 case IntervalService.MSG_COMPLETE:
-                    Intent landing = new Intent(TrackingActivity.this, LandingActivity.class);
-                    landing.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(landing);
-                    finish();
+                    mActivity.done();
+                    break;
+                case IntervalService.MSG_READY:
+                    if(mActivity.mStarted) {
+                        mActivity.done();
+                    }
                     break;
                 default:
                     super.handleMessage(msg);
             }
         }
     }
+
+    private void done() {
+        mStarted = false;
+        Intent landing = new Intent(TrackingActivity.this, LandingActivity.class);
+        landing.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(landing);
+        finish();
+    }
+
 
 
     /**
@@ -293,17 +300,17 @@ public class TrackingActivity extends AppCompatActivity {
     }
 
 
-    void doBindService() {
+    private void doBindService() {
         Timber.d("doBindService");
         // Establish a connection with the service.  We use an explicit
         // class name because there is no reason to be able to let other
         // applications replace our component.
         bindService(new Intent(TrackingActivity.this,
-                IntervalService.class), mConnection, 0);
+                IntervalService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
 
-    void doUnbindService() {
+    private void doUnbindService() {
         Timber.d("doUnbindService");
         if (mIsBound) {
             // If we have received the service, and hence registered with

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public final class Tips {
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String GOOD_WORK = "Keep up the good work!";
     private static final String OK_WORK = "It's beed a few days, get back to it!";
     private static final String DISMAL_WORK = "We miss you! Get back to work!";

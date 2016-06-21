@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="64dp"
-            android:text="Distance: " />
+            tools:text="Distance: " />
 
         <TextView
             android:id="@+id/time"
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="64dp"
             android:gravity="center_horizontal"
-            android:text="2.15 m"
+            tools:text="2.15 m"
             android:textColor="@color/primary_text"
             android:textSize="48sp" />
 

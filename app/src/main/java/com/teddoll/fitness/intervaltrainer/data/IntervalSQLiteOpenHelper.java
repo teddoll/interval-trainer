@@ -14,14 +14,14 @@ import com.teddoll.fitness.intervaltrainer.BuildConfig;
 public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = IntervalSQLiteOpenHelper.class.getSimpleName();
 
-    public static final String DATABASE_FILE_NAME = "intervals.db";
+    private static final String DATABASE_FILE_NAME = "intervals.db";
     private static final int DATABASE_VERSION = 1;
     private static IntervalSQLiteOpenHelper sInstance;
     private final Context mContext;
     private final IntervalSQLiteOpenHelperCallbacks mOpenHelperCallbacks;
 
     // @formatter:off
-    public static final String SQL_CREATE_TABLE_INTERVAL_LOCATION = "CREATE TABLE IF NOT EXISTS "
+    private static final String SQL_CREATE_TABLE_INTERVAL_LOCATION = "CREATE TABLE IF NOT EXISTS "
             + IntervalContract.LocationEntry.TABLE_NAME + " ( "
             + IntervalContract.LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + " INTEGER NOT NULL, "
@@ -31,7 +31,7 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
             + ", CONSTRAINT fk_interval_session_id FOREIGN KEY (" + IntervalContract.LocationEntry.INTERVAL_SESSION_ID + ") REFERENCES interval_session (_id) ON DELETE CASCADE"
             + " );";
 
-    public static final String SQL_CREATE_TABLE_INTERVAL_SESSION = "CREATE TABLE IF NOT EXISTS "
+    private static final String SQL_CREATE_TABLE_INTERVAL_SESSION = "CREATE TABLE IF NOT EXISTS "
             + IntervalContract.SessionEntry.TABLE_NAME + " ( "
             + IntervalContract.SessionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + IntervalContract.SessionEntry.START_TIME + " TEXT, "
@@ -40,7 +40,7 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
             + IntervalContract.SessionEntry.POLY_LINE_DATA + " TEXT "
             + " );";
 
-    public static final String SQL_CREATE_TABLE_INTERVAL_SET = "CREATE TABLE IF NOT EXISTS "
+    private static final String SQL_CREATE_TABLE_INTERVAL_SET = "CREATE TABLE IF NOT EXISTS "
             + IntervalContract.SetEntry.TABLE_NAME + " ( "
             + IntervalContract.SetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + IntervalContract.SetEntry.LABEL + " TEXT, "
@@ -48,7 +48,7 @@ public class IntervalSQLiteOpenHelper extends SQLiteOpenHelper {
             + IntervalContract.SetEntry.TIMES + " TEXT "
             + " );";
 
-    public static final String SQL_CREATE_INDEX_INTERVAL_SET_LABEL = "CREATE INDEX IDX_INTERVAL_SET_LABEL "
+    private static final String SQL_CREATE_INDEX_INTERVAL_SET_LABEL = "CREATE INDEX IDX_INTERVAL_SET_LABEL "
             + " ON " + IntervalContract.SetEntry.TABLE_NAME + " ( " + IntervalContract.SetEntry.LABEL + " );";
 
     // @formatter:on

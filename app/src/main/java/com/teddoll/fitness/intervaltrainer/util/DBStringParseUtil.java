@@ -21,9 +21,7 @@ public final class DBStringParseUtil {
     private DBStringParseUtil() {
     }
 
-    ;
-
-    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
     public static String serializeLocations(@NonNull List<Location> locations) {
         StringBuilder sb = new StringBuilder();
@@ -63,10 +61,9 @@ public final class DBStringParseUtil {
 
     public static Date deserializeDate(String date) {
         if (date == null) return null;
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("Zulu"));
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("Zulu"));
         try {
-            return format.parse(date);
+            return DATE_FORMAT.parse(date);
         } catch (ParseException e) {
             Timber.e("failed to deserialize Date");
         }
@@ -74,9 +71,8 @@ public final class DBStringParseUtil {
     }
 
     public static String serializeDate(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("Zulu"));
-        return format.format(date);
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("Zulu"));
+        return DATE_FORMAT.format(date);
     }
 
     public static List<Integer> deserializeSetTimes(String setTimes) {

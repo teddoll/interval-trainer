@@ -88,7 +88,7 @@ public class IntervalService extends Service implements LocationListener {
     /**
      * Command in service to handle new command.
      */
-    public static final int MSG_HANDLE = 5;
+    private static final int MSG_HANDLE = 5;
 
     /**
      * Command from service if not started
@@ -97,7 +97,6 @@ public class IntervalService extends Service implements LocationListener {
 
 
     private CountDownTimer mCountDownTimer;
-    private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private long mMillisUntilFinished;
 
@@ -114,6 +113,7 @@ public class IntervalService extends Service implements LocationListener {
 
         @Override
         public void handleMessage(Message msg) {
+            Timber.d("SERVICE: handleMessage: " + msg.what);
             switch (msg.what) {
                 case MSG_REGISTER_CLIENT:
                     mClients.add(msg.replyTo);
@@ -135,6 +135,7 @@ public class IntervalService extends Service implements LocationListener {
                     break;
                 case MSG_HANDLE:
                     handleCommand((Intent) msg.obj);
+                    break;
                 default:
                     super.handleMessage(msg);
             }
@@ -145,7 +146,7 @@ public class IntervalService extends Service implements LocationListener {
     /**
      * Provides the entry point to Google Play services.
      */
-    protected GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
 
 
     public IntervalService() {
@@ -162,7 +163,7 @@ public class IntervalService extends Service implements LocationListener {
         Timber.d("onCreate");
         HandlerThread thread = new HandlerThread(getClass().getSimpleName());
         thread.start();
-        mServiceLooper = thread.getLooper();
+        Looper mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
         mMessenger = new Messenger(mServiceHandler);
         mClients = new ArrayList<>();

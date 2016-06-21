@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_margin="4dp"
     android:background="@drawable/bg_widget"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="sp">
 
     <LinearLayout
         android:id="@+id/date_container"
@@ -22,7 +23,8 @@
             android:layout_marginStart="4dp"
             android:text="@string/widget_title"
             android:textColor="#f1000000"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            tools:ignore="SpUsage" />
 
 
         <TextView

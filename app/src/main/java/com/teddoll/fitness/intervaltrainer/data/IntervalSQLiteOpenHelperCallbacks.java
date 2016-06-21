@@ -12,7 +12,7 @@ import com.teddoll.fitness.intervaltrainer.BuildConfig;
  *
  * This file will not be overwritten if you re-run the content provider generator.
  */
-public class IntervalSQLiteOpenHelperCallbacks {
+class IntervalSQLiteOpenHelperCallbacks {
     private static final String TAG = IntervalSQLiteOpenHelperCallbacks.class.getSimpleName();
 
     public void onOpen(final Context context, final SQLiteDatabase db) {

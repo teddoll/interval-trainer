@@ -48,7 +48,7 @@ public class IntervalProvider extends ContentProvider {
                 IntervalContract.PATH_SET + "/#", URI_TYPE_INTERVAL_SET_ID);
     }
 
-    protected SQLiteOpenHelper mSqLiteOpenHelper;
+    private SQLiteOpenHelper mSqLiteOpenHelper;
 
     @Override
     public boolean onCreate() {

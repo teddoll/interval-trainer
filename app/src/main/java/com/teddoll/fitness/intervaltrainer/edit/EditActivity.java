@@ -66,7 +66,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 actionBar.setTitle(R.string.add_title);
             }
         }
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mSetId = savedInstanceState.getInt("setId", -1);
         } else {
             mSetId = getIntent().getIntExtra(EDIT_ID_ARG, -1);
@@ -77,7 +77,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mListView = (ListView) findViewById(R.id.list);
         registerForContextMenu(mListView);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mTotal = savedInstanceState.getInt("total", 0);
             mSetList = savedInstanceState.getIntegerArrayList("setList");
             mCopiedItems = savedInstanceState.getIntegerArrayList("copyList");
@@ -95,12 +95,15 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }
 
-        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                add(mSetList.size());
-            }
-        });
+        View add = findViewById(R.id.add);
+        if (add != null) {
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    add(mSetList.size());
+                }
+            });
+        }
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
     }
@@ -282,9 +285,9 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static class SetItemAdapter extends BaseAdapter {
 
-        private Context mContext;
-        private LayoutInflater mInflater;
-        private List<Integer> mItems;
+        private final Context mContext;
+        private final LayoutInflater mInflater;
+        private final List<Integer> mItems;
 
         public SetItemAdapter(@NonNull Context context, @NonNull List<Integer> items) {
             mContext = context;
@@ -318,7 +321,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
             ViewHolder vh = (ViewHolder) view.getTag();
-            vh.position.setText(String.valueOf(i+1));
+            vh.position.setText(String.valueOf(i + 1));
             vh.time.setText(mContext.getString(R.string.item_time_format, mItems.get(i)));
             return view;
         }

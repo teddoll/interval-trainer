@@ -17,7 +17,7 @@ public final class AppPrefs {
     private static final String PREFS = BuildConfig.APPLICATION_ID;
     private static final String TIP = "_tip";
     private static final String LAST_TIP = "_last_tip";
-    private SharedPreferences mPrefs;
+    private final SharedPreferences mPrefs;
     private static AppPrefs sAppPrefs;
 
     public static AppPrefs getInstance(@NonNull Context context) {

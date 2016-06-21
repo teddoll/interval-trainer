@@ -44,7 +44,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="24dp"
                     android:layout_marginStart="24dp"
-                    android:text="Session Times" />
+                    android:text="@string/session_times" />
 
                 <ImageView
                     android:contentDescription="@string/expand_desc"
@@ -87,6 +87,8 @@
                 android:listSelector="@android:color/transparent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingRight="4dp"
+                android:paddingEnd="4dp"
                 android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>

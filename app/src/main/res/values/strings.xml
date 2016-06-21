@@ -14,7 +14,6 @@
     <string name="name_hint">Name your interval set</string>
     <string name="name_label">Name:</string>
     <string name="total_format">Total Time: %1$d minutes</string>
-    <string name="minute_format">%1$d minutes</string>
     <string name="minute_string_format">%1$s minutes</string>
     <string name="copy_title">copy</string>
     <string name="paste_title">paste</string>
@@ -33,7 +32,6 @@
     <string name="set_interval_confirm">Add</string>
     <string name="location_rationale">Interval Trainer requires location tracking to function. Please enable Location permissions</string>
     <string name="location_rationale_positive">Settings</string>
-    <string name="title_activity_maps">Map</string>
     <string name="mph">%1$.2f mph</string>
     <string name="miles">%1$.2f miles</string>
     <string name="minutes">%1$.2f minutes</string>
@@ -43,4 +41,6 @@
     <string name="collapse_session_desc">Collapse session times</string>
     <string name="widget_title">Last Session:</string>
     <string name="no_records">No Records</string>
+    <string name="empty_sets">You have no training sets added. Please use the add button below to get started.</string>
+    <string name="session_times">Session Times</string>
 </resources>

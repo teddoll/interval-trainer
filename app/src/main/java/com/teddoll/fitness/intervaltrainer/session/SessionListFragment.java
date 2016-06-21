@@ -151,9 +151,9 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
         public static final String DATE_FORMAT = "MMM dd";
 
-        private SimpleDateFormat mDateFormat;
+        private final SimpleDateFormat mDateFormat;
         private int mSelected;
-        private boolean mShouldSelect;
+        private final boolean mShouldSelect;
 
         public SessionAdapter(@NonNull Context context, @NonNull Cursor cursor, boolean shouldSelect) {
             super(context, cursor, 0);

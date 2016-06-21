@@ -6,9 +6,9 @@ import android.os.SystemClock;
 /**
  * Created by teddydoll on 5/20/16.
  */
-public final class SessionTracker {
+final class SessionTracker {
 
-    public static final int UPPER_VELOCITY_BOUND = 100;
+    private static final int UPPER_VELOCITY_BOUND = 100;
 
     private long mTime;
     private Location mLocation;
