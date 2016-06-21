@@ -20,11 +20,10 @@ import android.widget.TextView;
 import com.teddoll.fitness.intervaltrainer.R;
 import com.teddoll.fitness.intervaltrainer.data.IntervalContract;
 import com.teddoll.fitness.intervaltrainer.util.DBStringParseUtil;
+import com.teddoll.fitness.intervaltrainer.util.DateSuffixUtil;
 import com.teddoll.fitness.intervaltrainer.util.UnitsUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -149,15 +148,11 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
     static class SessionAdapter extends CursorAdapter {
 
-        public static final String DATE_FORMAT = "MMM dd";
-
-        private final SimpleDateFormat mDateFormat;
         private int mSelected;
         private final boolean mShouldSelect;
 
         public SessionAdapter(@NonNull Context context, @NonNull Cursor cursor, boolean shouldSelect) {
             super(context, cursor, 0);
-            mDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             mSelected = 0;
             mShouldSelect = shouldSelect;
         }
@@ -172,7 +167,6 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
             View view = LayoutInflater.from(context).inflate(R.layout.item_session, viewGroup, false);
             ViewHolder vh = new ViewHolder();
             vh.date = (TextView) view.findViewById(R.id.date);
-            vh.time = (TextView) view.findViewById(R.id.time);
             vh.distance = (TextView) view.findViewById(R.id.distance);
             view.setTag(vh);
             return view;
@@ -187,18 +181,13 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
             }
             ViewHolder vh = (ViewHolder) view.getTag();
 
-            Date start = DBStringParseUtil.deserializeDate(
-                    cursor.getString(
-                            cursor.getColumnIndex(IntervalContract.SessionEntry.START_TIME)));
             Date end = DBStringParseUtil.deserializeDate(
                     cursor.getString(
                             cursor.getColumnIndex(IntervalContract.SessionEntry.END_TIME)));
             float distanceInMeters = cursor.getFloat(
                     cursor.getColumnIndex(IntervalContract.SessionEntry.DISTANCE_TRAVELED));
 
-            if (start != null) vh.date.setText(mDateFormat.format(start));
-            if (start != null && end != null) vh.time.setText(context.getString(
-                    R.string.minutes, (end.getTime() - start.getTime()) / 60000f));
+            if (end != null) vh.date.setText(DateSuffixUtil.getSuffixFormattedMonthDay(end));
 
             vh.distance.setText(context.getString(R.string.miles,
                     UnitsUtil.metersToMiles(distanceInMeters)));
@@ -207,7 +196,6 @@ public class SessionListFragment extends Fragment implements LoaderManager.Loade
 
         class ViewHolder {
             TextView date;
-            TextView time;
             TextView distance;
         }
     }

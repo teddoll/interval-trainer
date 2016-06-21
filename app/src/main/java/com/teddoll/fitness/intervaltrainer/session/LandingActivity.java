@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.teddoll.fitness.intervaltrainer.R;
+import com.teddoll.fitness.intervaltrainer.about.AboutActivity;
 import com.teddoll.fitness.intervaltrainer.prefs.AppPrefs;
 import com.teddoll.fitness.intervaltrainer.set.SetSelectionActivity;
 
@@ -94,7 +95,8 @@ public class LandingActivity extends AppCompatActivity implements SessionSelecti
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            startActivity(new Intent(LandingActivity.this, AboutActivity.class));
             return true;
         }
 

@@ -12,12 +12,10 @@ import com.teddoll.fitness.intervaltrainer.R;
 import com.teddoll.fitness.intervaltrainer.service.TipService;
 import com.teddoll.fitness.intervaltrainer.session.LandingActivity;
 import com.teddoll.fitness.intervaltrainer.util.DBStringParseUtil;
+import com.teddoll.fitness.intervaltrainer.util.DateSuffixUtil;
 import com.teddoll.fitness.intervaltrainer.util.UnitsUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class TipReceiver extends AppWidgetProvider {
     public TipReceiver() {
@@ -46,8 +44,8 @@ public class TipReceiver extends AppWidgetProvider {
 
                 Date date = DBStringParseUtil.deserializeDate(dateString);
                 if (date != null) {
-                    SimpleDateFormat format = new SimpleDateFormat("MMM d'" + getDaySuffix(date) + "'", Locale.US);
-                    views.setTextViewText(R.id.date, format.format(date));
+
+                    views.setTextViewText(R.id.date, DateSuffixUtil.getSuffixFormattedMonthDay(date));
                     views.setTextViewText(R.id.distance, context.getString(R.string.miles,
                             UnitsUtil.metersToMiles(distanceInMeters)));
                     views.setViewVisibility(R.id.distance, View.VISIBLE);
@@ -67,25 +65,7 @@ public class TipReceiver extends AppWidgetProvider {
         }
     }
 
-    private static String getDaySuffix(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        if (day >= 11 && day <= 13) {
-            return "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return "st";
-            case 2:
-                return "nd";
-            case 3:
-                return "rd";
-            default:
-                return "th";
-        }
 
-    }
 
 
 }
